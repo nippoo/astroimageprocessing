@@ -1,5 +1,7 @@
-import pyfits
+import numpy as np
+import pyfits       # PyFITS at https://pythonhosted.org/pyfits
 
-img = pyfits.open('mosaic.fits')
+hdudata = pyfits.open('mosaic.fits') # we hardcode the input data file
+img = hdudata[0].data # img is a NumPy array with the data
 
-img.info()
+print img.shape
