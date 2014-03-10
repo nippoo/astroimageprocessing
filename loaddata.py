@@ -22,24 +22,28 @@ mask = np.ones(img.shape, dtype='bool') # create mask with the same dimensions. 
 #plt.show()
 
 masked=img
-
+imgave = np.average(masked)
+imgstd = np.std(masked)
+print imgave
+print imgstd
 test=1	
 while (test !=0):
-	imgave = np.average(masked)
-	imgstd = np.std(masked)
-	print imgave
-	print imgstd
+
 
 	xmax=img.shape[0]
 	ymax=img.shape[1]
 	for y in range(0,ymax):
 		for x in range(0, xmax):
-			if img[x,y]>4*imgstd+imgave:
+			if img[x,y]>5*imgstd+imgave:
 				mask[x,y]= 0
 				#print "Setting Zero"
 
 	masked=img*mask
-	
+	imgave = np.average(masked)
+	imgstd = np.std(masked)
+	print "Revised average and std deviation:"
+	print imgave
+	print imgstd
 	test=input("Do you wish to continue (1/0)?")
 plt.clf()
 plt.imshow(masked)
