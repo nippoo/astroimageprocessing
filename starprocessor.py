@@ -13,13 +13,15 @@ class StarProcessor:
         self.img = self.hdudata[0].data # img is a NumPy array with the data
         self.mask = np.ones(self.img.shape, dtype='bool') # create mask with the same dimensions. We set the bit low to mask it
         
-        self.masked = self.img
+        self.RecalculateMasked()
 
-    def FindBrightest(image, mask):
+    def FindBrightest(self):
         # Finds the brightest unmasked pixel in an image and returns a tuple with its coordinates.
-        maskedimg = image * mask
-        return np.unravel_index(np.argmax(maskedimg), image.shape)
+        return np.unravel_index(np.argmax(self.masked), self.img.shape)
     
-    def MaskStar(image, coords, size=[[12, 12]]):
+    def MaskStar(self, coords, size=[[12, 12]]):
         pass
         # Masks star based on given pixel value, and returns a mask
+    
+    def RecalculateMasked(self):
+        self.masked = self.img*self.mask
