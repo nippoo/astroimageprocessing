@@ -1,6 +1,5 @@
 import numpy as np
 import pyfits       # PyFITS at https://pythonhosted.org/pyfits
-import matplotlib.pyplot as plt
 
 # Easier to hardcode the file, since we're working with a single file for the moment
 filename = 'mosaic.fits'
