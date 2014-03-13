@@ -15,6 +15,8 @@ mask = np.ones(img.shape, dtype='bool') # create mask with the same dimensions. 
 #header = getheader('mosaic.fits')
 #print header
 
+masked=img*mask
+
 # Code to plot histogram of intensity. Optional log scale. 
 
 fig, ax = plt.subplots()
