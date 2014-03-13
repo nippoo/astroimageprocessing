@@ -24,6 +24,7 @@ mask = np.ones(img.shape, dtype='bool') # create mask with the same dimensions. 
 masked=img
 imgave = np.average(masked)
 imgstd = np.std(masked)
+print "Initial Average and std deviate:"
 print imgave
 print imgstd
 test=1	
