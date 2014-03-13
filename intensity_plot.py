@@ -15,41 +15,7 @@ mask = np.ones(img.shape, dtype='bool') # create mask with the same dimensions. 
 #header = getheader('mosaic.fits')
 #print header
 
-#img = [(np.sign(x-9000.0)) for x in img]
-#img = [x - 3419.0 for x in img]
-#plt.clf()
-#plt.imshow(img)
-#plt.show()
-
-masked=img
-imgave = np.average(masked)
-imgstd = np.std(masked)
-print "Initial Average and std deviate:"
-print imgave
-print imgstd
-test=1	
-while (test !=0):
-
-
-	xmax=img.shape[0]
-	ymax=img.shape[1]
-	for y in range(0,ymax):
-		for x in range(0, xmax):
-			if img[x,y]>5*imgstd+imgave:
-				mask[x,y]= 0
-				#print "Setting Zero"
-
-	masked=img*mask
-	imgave = np.average(masked)
-	imgstd = np.std(masked)
-	print "Revised average and std deviation:"
-	print imgave
-	print imgstd
-	test=input("Do you wish to continue (1/0)?")
-plt.clf()
-plt.imshow(masked)
-plt.show()		
-"""
+masked=img*mask
 
 # Code to plot histogram of intensity. Optional log scale. 
 
@@ -82,5 +48,3 @@ ax.set_xlim(left[0], right[-1])
 ax.set_ylim(bottom.min(), top.max())
 ax.set_yscale('log')					#sets log scale for y-axis
 plt.show()
-
-"""
