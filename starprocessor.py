@@ -8,10 +8,15 @@ class StarProcessor:
     def __init__(self):
         self.OpenFile()
         
+    def flux(self, coords):
+        #returns flux at given coordinates, converting the count reading into flux using the predefined MAGZPT value.
+    	return self.header['MAGZPT'] - 2.5*np.log10(self.img[coords])
+        
     def OpenFile(self):    
         self.hdudata = pyfits.open(filename) # we hardcode the input data file
         self.img = self.hdudata[0].data # img is a NumPy array with the data
         self.mask = np.ones(self.img.shape, dtype='bool') # create mask with the same dimensions. We set the bit low to mask it
+        self.header = pyfits.getheader('mosaic.fits')
         
         self.RecalculateMasked()
 
@@ -37,5 +42,6 @@ class StarProcessor:
 		self.RecalculateMasked()
 		
 		return newstar
+        
     def RecalculateMasked(self):
         self.masked = self.img*self.mask
