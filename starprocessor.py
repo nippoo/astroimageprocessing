@@ -27,9 +27,15 @@ class StarProcessor:
 		for y in range(-radius+1,radius):
 			for x in range(-radius+1,+radius):
 				if ((coords[0]+x)<self.img.shape[0]) and ((coords[1]+y)<self.img.shape[1]):
-					if (x**2+y**2)<radius**2:
-						self.mask[coords[0]+x,coords[1]+y] = 0
+					if((coords[0]+x)>0) and ((coords[1]+y)>0):
+						if (x**2+y**2)<radius**2:
+							if self.mask[coords[0]+x,coords[1]+y]:
+								self.mask[coords[0]+x,coords[1]+y] = 0
+							else:
+								newstar = False
+								
 		self.RecalculateMasked()
-		return 
+		
+		return newstar
     def RecalculateMasked(self):
         self.masked = self.img*self.mask

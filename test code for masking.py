@@ -10,7 +10,7 @@ x=0
 while  x<1000:
 	bright_loc=s.FindBrightest()
 	s.MaskStar(bright_loc)
-	print bright_loc
+	#print bright_loc
 	x=x+1
 
 plt.clf()
