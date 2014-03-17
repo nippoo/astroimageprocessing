@@ -3,7 +3,7 @@ import pyfits       # PyFITS at https://pythonhosted.org/pyfits
 
 # Easier to hardcode the file, since we're working with a single file for the moment
 filename = 'mosaic.fits'
-threshperc = 0.5 # percentage of local maximum star intensity until we consider it no longer a star
+threshperc = 0.8 # percentage of local maximum star intensity until we consider it no longer a star
 
 class StarProcessor:
     def __init__(self):
@@ -46,7 +46,7 @@ class StarProcessor:
 #                                 self.mask[coords[0]+x,coords[1]+y] = 0
 #                             else:
 #                                 newstar = False
-                                
+        print coords                        
         # look directly up first until below threshold
         for x in range(coords[0], coords[0] - radius, -1):
 			if x < 0:
@@ -64,16 +64,16 @@ class StarProcessor:
 					else:
 						localmask[x, y] = 0
 					for y in range(coords[1], coords[1] + radius): # right
-						#if y > self.img.shape[1]:
-						#	print "break point 3"
-						#	print "y is ",y," shape 1 is ", self.img.shape[1]
-						#	break
+						if y > self.img.shape[1]:
+							print "break point 3"
+							print "y is ",y," shape 1 is ", self.img.shape[1]
+							break
 						if self.img[x, y] < threshold: # not a star any more
 							break
 						else:
 							localmask[x, y] = 0
                            
-        # now look down 
+        #now look down 
         for x in range(coords[0], coords[0] + radius):
 			if x > self.img.shape[0]:
 				print "break point 4"
@@ -90,9 +90,9 @@ class StarProcessor:
 					else:
 						localmask[x, y] = 0
 					for y in range(coords[1], coords[1] + radius): # right
-						#if y > self.img.shape[1]:
-						#	print "break point 6"
-						#	break
+						if y > self.img.shape[1]:
+							print "break point 6"
+							break
 						if self.img[x, y] < threshold: # not a star any more
 							break
 						else:
