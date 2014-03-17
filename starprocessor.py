@@ -3,12 +3,17 @@ import pyfits       # PyFITS at https://pythonhosted.org/pyfits
 
 # Easier to hardcode the file, since we're working with a single file for the moment
 filename = 'mosaic.fits'
-threshperc = 0.9 # percentage of local maximum star intensity until we consider it no longer a star
+threshperc = 0.5 # percentage of local maximum star intensity until we consider it no longer a star
 
 class StarProcessor:
     def __init__(self):
-        self.OpenFile()
-        
+		self.OpenFile()
+		self.PreMask()
+	
+    def PreMask(self):
+	#specfies any intial areas to be masked out and maskes them
+		self.RecalculateMasked()
+		
     def flux(self, coords):
         #returns flux at given coordinates, converting the count reading into flux using the predefined MAGZPT value.
     	return self.header['MAGZPT'] - 2.5*np.log10(self.img[coords])
@@ -44,35 +49,54 @@ class StarProcessor:
                                 
         # look directly up first until below threshold
         for x in range(coords[0], coords[0] - radius, -1):
-            if self.img[x, coords[1]] < threshold: # not a star any more
-                break
-            else:
-                for y in range(coords[1], coords[1] - radius, -1): # left
-                    if self.img[x, y] < threshold: # not a star any more
-                        break
-                    else:
-                        localmask[x, y] = 0
-                    for y in range(coords[1], coords[1] + radius): # right
-                        if self.img[x, y] < threshold: # not a star any more
-                            break
-                        else:
-                            localmask[x, y] = 0
+			if x < 0:
+				print "break point 1"
+				break
+			if self.img[x, coords[1]] < threshold: # not a star any more
+				break
+			else:
+				for y in range(coords[1], coords[1] - radius, -1): # left
+					if y < 0:
+						print "break point 2"
+						break
+					if self.img[x, y] < threshold: # not a star any more
+						break
+					else:
+						localmask[x, y] = 0
+					for y in range(coords[1], coords[1] + radius): # right
+						#if y > self.img.shape[1]:
+						#	print "break point 3"
+						#	print "y is ",y," shape 1 is ", self.img.shape[1]
+						#	break
+						if self.img[x, y] < threshold: # not a star any more
+							break
+						else:
+							localmask[x, y] = 0
                            
         # now look down 
         for x in range(coords[0], coords[0] + radius):
-            if self.img[x, coords[1]] < threshold: # not a star any more
-                break
-            else:
-                for y in range(coords[1], coords[1] - radius , -1): # left
-                    if self.img[x, y] < threshold: # not a star any more
-                        break
-                    else:
-                        localmask[x, y] = 0
-                    for y in range(coords[1], coords[1] + radius): # right
-                        if self.img[x, y] < threshold: # not a star any more
-                            break
-                        else:
-                            localmask[x, y] = 0
+			if x > self.img.shape[0]:
+				print "break point 4"
+				break
+			if self.img[x, coords[1]] < threshold: # not a star any more
+				break
+			else:
+				for y in range(coords[1], coords[1] - radius , -1): # left
+					if y < 0:
+						print "break point 5"
+						break
+					if self.img[x, y] < threshold: # not a star any more
+						break
+					else:
+						localmask[x, y] = 0
+					for y in range(coords[1], coords[1] + radius): # right
+						#if y > self.img.shape[1]:
+						#	print "break point 6"
+						#	break
+						if self.img[x, y] < threshold: # not a star any more
+							break
+						else:
+							localmask[x, y] = 0
                         
         self.mask = np.logical_and(self.mask, localmask)
 							
