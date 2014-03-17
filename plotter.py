@@ -45,5 +45,5 @@ ax.add_patch(patch)
 # update the view limits
 ax.set_xlim(left[0], right[-1])
 ax.set_ylim(bottom.min(), top.max())
-#ax.set_yscale('log')					#sets log scale for y-axis
+ax.set_yscale('log')					#sets log scale for y-axis
 plt.show()
