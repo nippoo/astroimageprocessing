@@ -9,7 +9,7 @@ s = StarProcessor()
 
 stars = []
 x=0
-while x<500:
+while x<2000:
     starloc = s.FindBrightest()
     if s.MaskStar(starloc): # this is a new star, add it to our dict
         flux = s.flux(starloc)	#calculates the Flux from the count for the star

@@ -15,4 +15,3 @@ s = StarProcessor()
 plt.clf()
 plt.imshow(s.img)
 plt.show()
-

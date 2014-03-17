@@ -9,10 +9,16 @@ class StarProcessor:
     def __init__(self):
 		self.OpenFile()
 		self.PreMask()
+		self.RemoveBackground
 	
     def PreMask(self):
 	#specfies any intial areas to be masked out and maskes them
 		self.RecalculateMasked()
+	
+    def RemoveBackground(self):
+	#removes background
+		self.img = self.img - np.median(self.img)
+		self.img.clip(min=0)
 		
     def flux(self, coords):
         #returns flux at given coordinates, converting the count reading into flux using the predefined MAGZPT value.
@@ -64,7 +70,7 @@ class StarProcessor:
 					else:
 						localmask[x, y] = 0
 					for y in range(coords[1], coords[1] + radius): # right
-						if y > self.img.shape[1]:
+						if y >= self.img.shape[1]:
 							print "break point 3"
 							print "y is ",y," shape 1 is ", self.img.shape[1]
 							break
@@ -75,7 +81,7 @@ class StarProcessor:
                            
         #now look down 
         for x in range(coords[0], coords[0] + radius):
-			if x > self.img.shape[0]:
+			if x >= self.img.shape[0]:
 				print "break point 4"
 				break
 			if self.img[x, coords[1]] < threshold: # not a star any more
@@ -90,7 +96,7 @@ class StarProcessor:
 					else:
 						localmask[x, y] = 0
 					for y in range(coords[1], coords[1] + radius): # right
-						if y > self.img.shape[1]:
+						if y >= self.img.shape[1]:
 							print "break point 6"
 							break
 						if self.img[x, y] < threshold: # not a star any more
