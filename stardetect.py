@@ -9,7 +9,7 @@ s = StarProcessor()
 
 stars = []
 x=0
-while x<3000:
+while x<100:
     starloc = s.FindBrightest()
     if s.MaskStar(starloc): # this is a new star, add it to our dict
         flux = s.flux(starloc)	#calculates the Flux from the count for the star
@@ -27,5 +27,5 @@ plt.plot(base[:-1], cumulative, c='blue')
 plt.show()
 
 plt.clf()
-plt.imshow(s.masked)
+plt.imshow(s.mask)
 plt.show()
