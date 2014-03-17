@@ -9,14 +9,14 @@ s = StarProcessor()
 
 stars = []
 x=0
-while x<1000:
+while x<500:
     starloc = s.FindBrightest()
     if s.MaskStar(starloc): # this is a new star, add it to our dict
         stars.append({'coords':starloc, 'flux':s.img[starloc]})	#adds star's paramters to catalogue
         print "Star", x, "found with flux", s.img[starloc]
         x=x+1
-    if s.img[starloc] < 3500: # we say this isn't a star any more - 2sd above background
-        break
+    #if s.img[starloc] < 3500: # we say this isn't a star any more - 2sd above background
+     #   break
         
 fluxlist = [i['flux'] for i in stars]
 values, base = np.histogram(fluxlist, bins=40)
