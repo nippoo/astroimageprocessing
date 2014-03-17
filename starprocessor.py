@@ -8,21 +8,31 @@ threshperc = 0.8 # percentage of local maximum star intensity until we consider 
 class StarProcessor:
     def __init__(self):
 		self.OpenFile()
+		#self.ConvertFlux()
 		self.PreMask()
-		self.RemoveBackground
+		#self.RemoveBackground()
+	
+    def ConvertFlux(self):
+	#converts whole image to flux
+		self.img = -2.5*np.log10(self.img)
+		print self.img
+		self.img += self.header['MAGZPT']
+		print self.img
 	
     def PreMask(self):
 	#specfies any intial areas to be masked out and maskes them
+	#code to be written
+		self.mask[:,0:95] = 0
+		self.mask[:,2470:] = 0
+		self.mask[0:113,:] = 0
+		self.mask[:,0:95] = 0
 		self.RecalculateMasked()
 	
     def RemoveBackground(self):
 	#removes background
 		self.img = self.img - np.median(self.img)
 		self.img.clip(min=0)
-		
-    def flux(self, coords):
-        #returns flux at given coordinates, converting the count reading into flux using the predefined MAGZPT value.
-    	return self.header['MAGZPT'] - 2.5*np.log10(self.img[coords])
+		self.RecalculateMasked()
         
     def OpenFile(self):    
         self.hdudata = pyfits.open(filename) # we hardcode the input data file
@@ -112,3 +122,4 @@ class StarProcessor:
         
     def RecalculateMasked(self):
         self.masked = self.img*self.mask
+		
