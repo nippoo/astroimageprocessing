@@ -13,7 +13,7 @@ while x<500:
     starloc = s.FindBrightest()
     if s.MaskStar(starloc): # this is a new star, add it to our dict
         stars.append({'coords':starloc, 'count':s.img[starloc]})	#adds star's paramters to catalogue
-        print "Star", x, "found with count", s.img[starloc]
+        print "Star", x, "found with flux", s.flux(starloc)
         x=x+1
     #if s.img[starloc] < 3500: # we say this isn't a star any more - 2sd above background
      #   break
