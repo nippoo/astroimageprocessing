@@ -21,12 +21,28 @@ imgstd = np.std(masked)
 print "Initial Average and std deviate:"
 print imgave
 print imgstd
+
+xmax=img.shape[0]
+ymax=img.shape[1]
+
 test=1	
+print "masking"
+for y in range(0,ymax):
+		for x in range(0, xmax):
+			if img[x,y] > 3500 or img[x,y]< 3350:
+				mask[x,y] = 0
+print "apllying mask"
+masked=img*mask	
+imgmode = np.mode(masked)
+imgave = np.average(masked)
+imgstd = np.std(masked)
+print "Initial Average and std deviate:"
+print imgave
+print imgstd
 while (test !=0):
 
 
-	xmax=img.shape[0]
-	ymax=img.shape[1]
+
 	for y in range(0,ymax):
 		for x in range(0, xmax):
 			if img[x,y]>5*imgstd+imgave:
