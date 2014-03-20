@@ -3,8 +3,7 @@ import pyfits       # PyFITS at https://pythonhosted.org/pyfits
 
 # Easier to hardcode the file, since we're working with a single file for the moment
 filename = 'mosaic.fits'
-threshperc = 0.7 # percentage of local maximum star intensity until we consider it no longer a star
-threshval = 0.01
+threshperc = 0.8 # percentage of local maximum star intensity until we consider it no longer a star
 
 class StarProcessor:
     def __init__(self):
@@ -54,16 +53,7 @@ class StarProcessor:
         localmask = np.ones(self.img.shape, dtype='bool')
         #threshold = self.img[coords] + threshval # threshold value (edge of star)
         threshold = self.img[coords]*threshperc
-		
-		# for y in range(-radius+1,radius):
-#             for x in range(-radius+1,+radius):
-#                 if ((coords[0]+x)<self.img.shape[0]) and ((coords[1]+y)<self.img.shape[1]):
-#                     if((coords[0]+x)>0) and ((coords[1]+y)>0):
-#                         if (x**2+y**2)<radius**2:
-#                             if self.mask[coords[0]+x,coords[1]+y]:
-#                                 self.mask[coords[0]+x,coords[1]+y] = 0
-#                             else:
-#                                 newstar = False
+
         print coords                        
         # look directly up first until below threshold
         for x in range(coords[0], coords[0] - radius, -1):
@@ -135,4 +125,17 @@ class StarProcessor:
         
     def RecalculateMasked(self):
         self.masked = self.img*self.mask
+        
+    def MaskCircle(self, coords, radius=12):
+            for y in range(-radius+1,radius):
+                for x in range(-radius+1,+radius):
+                    if ((coords[0]+x)<self.img.shape[0]) and ((coords[1]+y)<self.img.shape[1]):
+                        if((coords[0]+x)>0) and ((coords[1]+y)>0):
+                            if (x**2+y**2)<radius**2:
+                                if self.mask[coords[0]+x,coords[1]+y]:
+                                    self.mask[coords[0]+x,coords[1]+y] = 0
+                                else:
+                                    newstar = False
+            self.RecalculateMasked()                
+            return newstar
 		
