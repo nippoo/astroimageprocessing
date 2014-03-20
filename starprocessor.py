@@ -3,24 +3,26 @@ import pyfits       # PyFITS at https://pythonhosted.org/pyfits
 
 # Easier to hardcode the file, since we're working with a single file for the moment
 filename = 'mosaic.fits'
-threshperc = 1.001 # percentage of local maximum star intensity until we consider it no longer a star
+threshperc = 0.7 # percentage of local maximum star intensity until we consider it no longer a star
 threshval = 0.01
 
 class StarProcessor:
     def __init__(self):
 		self.OpenFile()
-		self.ConvertFlux()
+		#self.ConvertFlux()	#work with counts to start with not flux
 		#self.PreMask()
 		#self.RemoveBackground()
 	
     def ConvertFlux(self):
 	#converts whole image to flux
-		#self.img = self.img*self.mask
 		self.img = -2.5*np.log10(self.img)
-		#print self.img
 		self.img += self.header['MAGZPT']
 		self.RecalculateMasked()
-		#print self.img
+		
+    def flux(self, coords):
+    #returns flux at given coordinates, converting the count reading into flux using the predefined MAGZPT value.
+	return self.header['MAGZPT'] - 2.5*np.log10(self.img[coords])
+
 	
     def PreMask(self):
 	#specfies any intial areas to be masked out and maskes them
@@ -36,7 +38,7 @@ class StarProcessor:
     def OpenFile(self):    
         self.hdudata = pyfits.open(filename) # we hardcode the input data file
         self.img = self.hdudata[0].data # img is a NumPy array with the data
-        self.img = self.img[113:4512, 95:2470]
+        self.img = self.img[113:4512, 95:2470] #cuts off the noisy edges
         self.mask = np.ones(self.img.shape, dtype='bool') # create mask with the same dimensions. We set the bit low to mask it
         self.header = pyfits.getheader('mosaic.fits')
         
@@ -44,13 +46,14 @@ class StarProcessor:
 
     def FindBrightest(self):
         # Finds the brightest unmasked pixel in an image and returns a tuple with its coordinates.
-        return np.unravel_index(np.argmin(self.masked), self.img.shape)
+        return np.unravel_index(np.argmax(self.masked), self.img.shape)
     
     def MaskStar(self, coords, radius=100):
         # Masks star based on given pixel value, and returns a mask
         newstar = True
         localmask = np.ones(self.img.shape, dtype='bool')
-        threshold = self.img[coords] + threshval # threshold value (edge of star)
+        #threshold = self.img[coords] + threshval # threshold value (edge of star)
+        threshold = self.img[coords]*threshperc
 		
 		# for y in range(-radius+1,radius):
 #             for x in range(-radius+1,+radius):
@@ -67,23 +70,28 @@ class StarProcessor:
 			if x < 0:
 				print "break point 1"
 				break
-			if self.img[x, coords[1]] > threshold: # not a star any more
+			if self.img[x, coords[1]] < threshold: # not a star any more
 				break
 			else:
 				for y in range(coords[1], coords[1] - radius, -1): # left
 					if y < 0:
 						print "break point 2"
 						break
-					if self.img[x, y] > threshold: # not a star any more
+					if self.img[x, y]==0:
+						newstar = false
+						print "not new star"
+					if self.img[x, y] < threshold: # not a star any more
 						break
 					else:
 						localmask[x, y] = 0
 					for y in range(coords[1], coords[1] + radius): # right
 						if y >= self.img.shape[1]:
 							print "break point 3"
-							#print "y is ",y," shape 1 is ", self.img.shape[1]
 							break
-						if self.img[x, y] > threshold: # not a star any more
+						if self.img[x, y] == 0:
+							newstar = false
+							print "not new star"
+						if self.img[x, y] < threshold: # not a star any more
 							break
 						else:
 							localmask[x, y] = 0
@@ -93,14 +101,17 @@ class StarProcessor:
 			if x >= self.img.shape[0]:
 				#print "break point 4"
 				break
-			if self.img[x, coords[1]] > threshold: # not a star any more
+			if self.img[x, coords[1]] < threshold: # not a star any more
 				break
 			else:
 				for y in range(coords[1], coords[1] - radius , -1): # left
 					if y < 0:
 						print "break point 5"
 						break
-					if self.img[x, y] > threshold: # not a star any more
+					if self.img[x, y] == 0:
+						newstar = false
+						print "not new star"
+					if self.img[x, y] < threshold: # not a star any more
 						break
 					else:
 						localmask[x, y] = 0
@@ -108,7 +119,10 @@ class StarProcessor:
 						if y >= self.img.shape[1]:
 							print "break point 6"
 							break
-						if self.img[x, y] > threshold: # not a star any more
+						if self.img[x, y] == 0:
+							newstar = false
+							print "not new star"
+						if self.img[x, y] < threshold: # not a star any more
 							break
 						else:
 							localmask[x, y] = 0
