@@ -4,10 +4,12 @@ import pyfits       # PyFITS at https://pythonhosted.org/pyfits
 # Easier to hardcode the file, since we're working with a single file for the moment
 filename = 'mosaic.fits'
 threshperc = 0.8 # percentage of local maximum star intensity until we consider it no longer a star
+maskthreshold = 35000
 
 class StarProcessor:
     def __init__(self):
-		self.OpenFile()
+        self.OpenFile()
+        self.MaskAboveThreshold()
 		#self.ConvertFlux()	#work with counts to start with not flux
 		#self.PreMask()
 		#self.RemoveBackground()
@@ -46,6 +48,10 @@ class StarProcessor:
     def FindBrightest(self):
         # Finds the brightest unmasked pixel in an image and returns a tuple with its coordinates.
         return np.unravel_index(np.argmax(self.masked), self.img.shape)
+        
+    def MaskAboveThreshold(self):
+        self.mask[self.img > maskthreshold] = False
+        self.RecalculateMasked()
     
     def MaskStar(self, coords, radius=100):
         # Masks star based on given pixel value, and returns a mask
