@@ -52,12 +52,13 @@ class StarProcessor:
         self.mask[self.img > maskthreshold] = False
         self.RecalculateMasked()
     
-    def MaskStar(self, coords, radius=800, threshperc = 0): 			# percentage of local maximum star intensity until we consider it no longer a star
+    def MaskStar(self, coords, radius=150, threshperc = 0): 			# percentage of local maximum star intensity until we consider it no longer a star
         # Masks star based on given pixel value, and returns a mask
         newstar = True
         localmask = np.ones(self.img.shape, dtype='bool')
         #threshold = self.img[coords] + threshval # threshold value (edge of star)
         threshold = self.img[coords]*threshperc
+        print threshold
 
         print coords                        
         # look directly up first until below threshold
@@ -122,7 +123,7 @@ class StarProcessor:
 						else:
 							localmask[x, y] = 0
                         
-        self.mask = np.logical_and(self.mask, localmask)
+        self.mask = localmask#np.logical_and(self.mask, localmask)
 							
     	self.RecalculateMasked()
 	
