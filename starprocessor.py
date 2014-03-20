@@ -3,7 +3,6 @@ import pyfits       # PyFITS at https://pythonhosted.org/pyfits
 
 # Easier to hardcode the file, since we're working with a single file for the moment
 filename = 'mosaic.fits'
-threshperc = 0.8 # percentage of local maximum star intensity until we consider it no longer a star
 maskthreshold = 35000
 
 class StarProcessor:
@@ -53,7 +52,7 @@ class StarProcessor:
         self.mask[self.img > maskthreshold] = False
         self.RecalculateMasked()
     
-    def MaskStar(self, coords, radius=100):
+    def MaskStar(self, coords, radius=800, threshperc = 0): 			# percentage of local maximum star intensity until we consider it no longer a star
         # Masks star based on given pixel value, and returns a mask
         newstar = True
         localmask = np.ones(self.img.shape, dtype='bool')
