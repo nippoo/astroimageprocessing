@@ -1,6 +1,6 @@
 import numpy as np
 import pyfits       # PyFITS at https://pythonhosted.org/pyfits
-
+import matplotlib.pyplot as plt
 # Easier to hardcode the file, since we're working with a single file for the moment
 filename = 'mosaic.fits'
 maskthreshold = 35000
@@ -8,7 +8,7 @@ maskthreshold = 35000
 class StarProcessor:
     def __init__(self):
         self.OpenFile()
-        #self.MaskAboveThreshold()
+        self.MaskAboveThreshold()
 		#self.ConvertFlux()	#work with counts to start with not flux
 		#self.PreMask()
 		#self.RemoveBackground()
@@ -131,37 +131,39 @@ class StarProcessor:
 	
     	return newstar
 	
-    def MaskGalaxy(self, coords, Gradius = 6, Bradius=12):
-        localmask = np.ones(self.img.shape, dtype='bool')
-        Tcount = 0
-        Tbckgnd = 0
-        Agal = 0
-        Abckgnd = 0
-        #algorithm to caluclate average count of a galaxy
-        for y in range(-Bradius+1,Bradius):
-        	for x in range(-Bradius+1,+Bradius):
-        		if ((coords[0]+x)<self.img.shape[0]) and ((coords[1]+y)<self.img.shape[1]):
-        			if((coords[0]+x)>0) and ((coords[1]+y)>0):
-        				if (x**2+y**2)<Bradius**2 and (x**2+y**2)>Gradius:
-        					Tbckgnd = Tbckgnd + self.img[coords]
-        					Abckgnd = Abckgnd + 1
-        					print "background pixel"
-        				if (x**2+y**2)<Gradius:
-        					Tcount = Tcount + self.img[coords] 
-        					Agal = Agal + 1
-        					print "galaxy pixel"
-        plt.clf()
-        plt.imshow(localmask)
-        plt.show()					
-        localbck = Tbckgnd/Abckgnd
-        print "localbck", localbck
-        avecount = Tcount/Agal
-        print "average count", avecount
-        avecount = avecount-localbck
-        print "true <count>", avecount
-        self.mask = np.logical_and(self.mask, localmask)					
-        self.RecalculateMasked()
-        return avecount
+    def MaskGalaxy(self, coords, Gradius = 12, Bradius=50):
+		localmask = np.ones(self.img.shape, dtype='bool')
+		Tcount = 0
+		Tbckgnd = 0
+		Agal = 0
+		Abckgnd = 0
+		#algorithm to caluclate average count of a galaxy
+		print coords
+		for y in range(-Bradius+1,Bradius):
+			for x in range(-Bradius+1,+Bradius):
+				if ((coords[0]+x)<self.img.shape[0]) and ((coords[1]+y)<self.img.shape[1]):
+					if((coords[0]+x)>0) and ((coords[1]+y)>0):
+						if (x**2+y**2)<Bradius**2 and (x**2+y**2)>Gradius:
+							Tbckgnd = Tbckgnd + self.img[coords[0]+x,coords[1]+y]
+							Abckgnd = Abckgnd + 1
+							#print "background pixel"
+        				if (x**2+y**2)<=Gradius:
+							localmask[coords[0]+x, coords[1]+y] = 0
+							Tcount = Tcount + self.img[coords[0]+x,coords[1]+y]
+							Agal = Agal + 1
+							#print "galaxy pixel"
+		#plt.clf()
+		#plt.imshow(localmask)
+		#plt.show()					
+		localbck = Tbckgnd/Abckgnd
+		print "localbck", localbck
+		avecount = Tcount/Agal
+		print "average count", avecount
+		avecount = avecount-localbck
+		print "true <count>", avecount
+		self.mask = np.logical_and(self.mask, localmask)					
+		self.RecalculateMasked()
+		return avecount
     
     def RecalculateMasked(self):
         self.masked = self.img*self.mask
