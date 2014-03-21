@@ -138,7 +138,7 @@ class StarProcessor:
 		Agal = 0
 		Abckgnd = 0
 		#algorithm to caluclate average count of a galaxy
-		print coords
+		#print coords
 		for y in range(-Bradius+1,Bradius):
 			for x in range(-Bradius+1,+Bradius):
 				if ((coords[0]+x)<self.img.shape[0]) and ((coords[1]+y)<self.img.shape[1]):
@@ -156,11 +156,11 @@ class StarProcessor:
 		#plt.imshow(localmask)
 		#plt.show()					
 		localbck = Tbckgnd/Abckgnd
-		print "localbck", localbck
+		#print "localbck", localbck
 		avecount = Tcount/Agal
-		print "average count", avecount
+		#print "average count", avecount
 		avecount = avecount-localbck
-		print "true <count>", avecount
+		#print "true <count>", avecount
 		self.mask = np.logical_and(self.mask, localmask)					
 		self.RecalculateMasked()
 		return avecount
