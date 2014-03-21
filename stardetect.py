@@ -7,17 +7,22 @@ import matplotlib.path as path
 
 s = StarProcessor()
 
+
+
 stars = []
-x=0
-while x<20:
-	starloc = s.FindBrightest()
-	print s.img[starloc]
-	if s.img[starloc] < 34000: # we say this isn't a star any more - 2sd above background
-		print "break"
-		break
-	s.MaskStar(starloc) # this is a new star, add it to our dict
-	x=x+1
-	print x
+
+
+#pre-masking
+#x=0
+#while x<20:
+#	starloc = s.FindBrightest()
+#	print s.img[starloc]
+#	if s.img[starloc] < 34000: # we say this isn't a star any more - 2sd above background
+#		print "break"
+#		break
+#	s.MaskStar(starloc) # this is a new star, add it to our dict
+#	x=x+1
+#	print x
 
         
 s.RecalculateMasked
@@ -35,3 +40,8 @@ plt.show()
 plt.clf()
 plt.imshow(s.masked)
 plt.show()
+
+
+#galaxy detection
+starloc = s.FindBrightest()
+print s.MaskGalaxy(starloc)

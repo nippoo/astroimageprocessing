@@ -8,7 +8,7 @@ maskthreshold = 35000
 class StarProcessor:
     def __init__(self):
         self.OpenFile()
-        self.MaskAboveThreshold()
+        #self.MaskAboveThreshold()
 		#self.ConvertFlux()	#work with counts to start with not flux
 		#self.PreMask()
 		#self.RemoveBackground()
@@ -138,20 +138,27 @@ class StarProcessor:
 		Agal = 0
 		Abckgnd = 0
 		#algorithm to caluclate average count of a galaxy
-		#for y in range(-Bradius+1,Bradius):
-         #       for x in range(-Bradius+1,+Bradius):
-          #          if ((coords[0]+x)<self.img.shape[0]) and ((coords[1]+y)<self.img.shape[1]):
-           #             if((coords[0]+x)>0) and ((coords[1]+y)>0):
-            #                if (x**2+y**2)<Bradius**2 and (x**2+y**2)>Gradius:
-			#					Tbckgnd = Tbckgnd + self.img[coords]
-			#					Abckgnd = Abckgnd + 1
-			#				if (x**2+y**2)<Gradius:
-			#					Tcount = Tcount + self.img[coords] 
-			#					Agal = Agal + 1
-		#localbck = Tbckgnd/Abckgnd
-		#avecount = Tcount/Agal
-		#avecount = avecount-localbck
-		
+		for y in range(-Bradius+1,Bradius):
+			for x in range(-Bradius+1,+Bradius):
+				if ((coords[0]+x)<self.img.shape[0]) and ((coords[1]+y)<self.img.shape[1]):
+					if((coords[0]+x)>0) and ((coords[1]+y)>0):
+						if (x**2+y**2)<Bradius**2 and (x**2+y**2)>Gradius:
+							Tbckgnd = Tbckgnd + self.img[coords]
+							Abckgnd = Abckgnd + 1
+							print "background pixel"
+						if (x**2+y**2)<Gradius:
+							Tcount = Tcount + self.img[coords] 
+							Agal = Agal + 1
+							print "galaxy pixel"
+		plt.clf()
+		plt.imshow(localmask)
+		plt.show()					
+		localbck = Tbckgnd/Abckgnd
+		print "localbck", localbck
+		avecount = Tcount/Agal
+		print "average count", avecount
+		avecount = avecount-localbck
+		print "true <count>", avecount
 		self.mask = np.logical_and(self.mask, localmask)					
     	self.RecalculateMasked()
     	return avecount
