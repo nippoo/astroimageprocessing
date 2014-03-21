@@ -9,10 +9,11 @@ s = StarProcessor()
 
 stars = []
 x=0
-while x<30:
+while x<20:
 	starloc = s.FindBrightest()
 	print s.img[starloc]
-	if s.img[starloc] < 32000: # we say this isn't a star any more - 2sd above background
+	if s.img[starloc] < 34000: # we say this isn't a star any more - 2sd above background
+		print "break"
 		break
 	s.MaskStar(starloc) # this is a new star, add it to our dict
 	x=x+1
