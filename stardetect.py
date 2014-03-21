@@ -8,13 +8,15 @@ import matplotlib.path as path
 s = StarProcessor()
 
 stars = []
-# x=0
-# while x<20:
-starloc = s.FindBrightest()
-# if s.img[starloc] < 38000: # we say this isn't a star any more - 2sd above background
-#     break
-s.MaskStar(starloc) # this is a new star, add it to our dict
-     # x=x+1
+x=0
+while x<30:
+	starloc = s.FindBrightest()
+	print s.img[starloc]
+	if s.img[starloc] < 32000: # we say this isn't a star any more - 2sd above background
+		break
+	s.MaskStar(starloc) # this is a new star, add it to our dict
+	x=x+1
+	print x
 
         
 s.RecalculateMasked
@@ -27,4 +29,8 @@ s.RecalculateMasked
 
 plt.clf()
 plt.imshow(s.mask)
+plt.show()
+
+plt.clf()
+plt.imshow(s.masked)
 plt.show()
