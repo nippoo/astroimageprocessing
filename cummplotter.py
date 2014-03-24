@@ -19,6 +19,6 @@ cumulative = np.cumsum(values)
 y_error = cumulative**0.5
 print cumulative
 print y_error
-plt.plot(base[:-1], cumulative,c='blue')
-plt.semilogy()
+plt.errorbar(base[:-1], cumulative, y_error, c='blue')
+#plt.semilogy()
 plt.show()
