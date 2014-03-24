@@ -147,7 +147,7 @@ class StarProcessor:
         #plt.clf()
         #plt.imshow(localmask)
         #plt.show()					
-        localbck = np.median(self.masked[annulus])
+        localbck = np.median(self.img[np.logical_and(self.mask, annulus)])
         #print "localbck", localbck
         avecount = np.mean(self.img[gal])
         #print "average count", avecount
