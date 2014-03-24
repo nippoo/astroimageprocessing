@@ -134,38 +134,27 @@ class StarProcessor:
     	return newstar
 	
     def MaskGalaxy(self, coords, Gradius = 12, Bradius=50):
-		localmask = np.ones(self.img.shape, dtype='bool')
-		Tcount = 0
-		Tbckgnd = 0
-		Agal = 0
-		Abckgnd = 0
 		#algorithm to caluclate average count of a galaxy
-		#print coords
-		for y in range(-Bradius+1,Bradius):
-			for x in range(-Bradius+1,+Bradius):
-				if ((coords[0]+x)<self.img.shape[0]) and ((coords[1]+y)<self.img.shape[1]):
-					if((coords[0]+x)>0) and ((coords[1]+y)>0):
-						if (x**2+y**2)<Bradius**2 and (x**2+y**2)>Gradius:
-							Tbckgnd = Tbckgnd + self.img[coords[0]+x,coords[1]+y]
-							Abckgnd = Abckgnd + 1
-							#print "background pixel"
-        				if (x**2+y**2)<=Gradius:
-							localmask[coords[0]+x, coords[1]+y] = 0
-							Tcount = Tcount + self.img[coords[0]+x,coords[1]+y]
-							Agal = Agal + 1
-							#print "galaxy pixel"
-		#plt.clf()
-		#plt.imshow(localmask)
-		#plt.show()					
-		localbck = Tbckgnd/Abckgnd
-		#print "localbck", localbck
-		avecount = Tcount/Agal
-		#print "average count", avecount
-		avecount = avecount-localbck
-		#print "true <count>", avecount
-		self.mask = np.logical_and(self.mask, localmask)					
-		self.RecalculateMasked()
-		return avecount
+        
+        a, b = coords
+
+        y,x = np.ogrid[-a:self.img.shape[0]-a, -b:self.img.shape[1]-b]
+        gal = (x*x + y*y <= Gradius*Gradius) 
+        annulus = (x*x + y*y <= Bradius*Bradius) & (x*x + y*y >= Gradius*Gradius)
+        
+        #plt.clf()
+        #plt.imshow(localmask)
+        #plt.show()					
+        localbck = np.median(self.img[annulus])
+        #print "localbck", localbck
+        avecount = np.mean(self.img[gal])
+        #print "average count", avecount
+        avecount = avecount-localbck
+        localmask = np.logical_not(gal)
+        #print "true <count>", avecount
+        self.mask = np.logical_and(self.mask, localmask)					
+        self.RecalculateMasked()
+        return avecount
     
     def RecalculateMasked(self):
         self.masked = self.img*self.mask
