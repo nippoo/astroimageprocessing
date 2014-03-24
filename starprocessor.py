@@ -133,14 +133,14 @@ class StarProcessor:
 	
     	return newstar
 	
-    def MaskGalaxy(self, coords, Gradius = 12, Bradius=50):
+    def MaskGalaxy(self, coords, Gradius = 12, inner_Bradius = 20, Bradius = 50):
 		#algorithm to caluclate average count of a galaxy
         
         a, b = coords
 
         y,x = np.ogrid[-a:self.img.shape[0]-a, -b:self.img.shape[1]-b]
         gal = (x*x + y*y <= Gradius*Gradius) 
-        annulus = (x*x + y*y <= Bradius*Bradius) & (x*x + y*y >= Gradius*Gradius)
+        annulus = (x*x + y*y <= Bradius*Bradius) & (x*x + y*y >= inner_Bradius*inner_Bradius)
         
         #plt.clf()
         #plt.imshow(localmask)

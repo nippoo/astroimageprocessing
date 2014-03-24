@@ -24,7 +24,7 @@ while x<5000:
     	print "hit background level in count"
     	break
     galradius=s.FindGalaxyRadius(starloc)
-    galcount=s.MaskGalaxy(starloc, Gradius=galradius)
+    galcount=s.MaskGalaxy(starloc, Gradius=galradius, inner_Bradius = galradius + 15, Bradius = galradius + 80)
     galflux=s.flux(starloc)
     stars.append({'coords':starloc, 'count':galcount, 'flux':galflux})	#adds star's paramters to catalogue
     print x, "	",s.img[starloc], "   ", starloc, "   ", galflux,  "   ", galradius
