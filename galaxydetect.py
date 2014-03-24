@@ -26,9 +26,9 @@ while x<5000:
     galradius=s.FindGalaxyRadius(starloc)
     galcount=s.MaskGalaxy(starloc, Gradius=galradius, inner_Bradius = galradius + 15, Bradius = galradius + 80)
     if galcount>0:
-		galflux=s.flux(starloc)
+		galflux=s.convert_to_flux(starloc)
 		stars.append({'coords':starloc, 'count':galcount, 'flux':galflux})	#adds star's paramters to catalogue
-		print x, "	",s.img[starloc], "   ", starloc, "   ", galflux,  "   ", galradius
+		print x,"   ", starloc, "	",s.img[starloc],"   ", galcount,  "   ", galflux,  "   ", galradius
 		x=x+1
 #print stars
 
