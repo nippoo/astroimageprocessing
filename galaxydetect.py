@@ -17,7 +17,7 @@ stars = [] # intialise catalogue
 
 #galaxy detection
 x = 0
-while x<1000:
+while x<10000:
 	
     starloc = s.FindBrightest()
     if s.img[starloc]<3500:
@@ -43,11 +43,3 @@ plt.show()
 
 s.RecalculateMasked
 np.save("catalogue", stars)
-fluxlist = [i['flux'] for i in stars]
-values, base = np.histogram(fluxlist, bins=40)
-cumulative = np.cumsum(values)
-plt.plot(base[:-1], cumulative, c='blue')
-plt.semilogy()
-#ax = plt
-#ax.set_yscale('log') 
-plt.show()
