@@ -17,7 +17,7 @@ stars = [] # intialise catalogue
 
 #galaxy detection
 x = 0
-while x<500:
+while x<1000:
 	
     starloc = s.FindBrightest()
     if s.img[starloc]<3500:
