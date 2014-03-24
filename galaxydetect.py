@@ -18,17 +18,17 @@ stars = [] # intialise catalogue
 #galaxy detection
 x = 0
 while x<10000:
-	
-    starloc = s.FindBrightest()
-    if s.img[starloc]<3500:
-    	print "hit background level in count"
-    	break
-    galradius=s.FindGalaxyRadius(starloc)
-    galcount=s.MaskGalaxy(starloc, Gradius=galradius)
-    galflux=s.count_to_flux(galcount)
-    stars.append({'coords':starloc, 'count':galcount, 'flux':galflux})	#adds star's paramters to catalogue
-    print x, "	",starloc, "   ",s.img[starloc], "   ", galcount, "   ", galflux,  "   ", galradius
-    x=x+1
+	starloc = s.FindBrightest()
+	if s.img[starloc]<3500:
+		print "hit background level in count"
+		break
+	galradius=s.FindGalaxyRadius(starloc)
+	galcount=s.MaskGalaxy(starloc, Gradius=galradius)
+	if galcount>0:
+		galflux=s.count_to_flux(galcount)
+		stars.append({'coords':starloc, 'count':galcount, 'flux':galflux})	#adds star's paramters to catalogue
+		print x, "	",starloc, "   ",s.img[starloc], "   ", galcount, "   ", galflux,  "   ", galradius
+		x=x+1
 	
 #print stars
 

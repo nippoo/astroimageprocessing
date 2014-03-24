@@ -154,8 +154,6 @@ class StarProcessor:
         avecount = avecount-localbck
         localmask = np.logical_not(gal)
         #print "true <count>", avecount
-		if avecount<0:
-			avecount=0
         self.mask = np.logical_and(self.mask, localmask)					
         self.RecalculateMasked()
         return avecount
