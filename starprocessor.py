@@ -15,6 +15,8 @@ class StarProcessor:
 	
     def ConvertFlux(self):
 	#converts whole image to flux
+		print self.header['MAGZPT']
+		print self.header['MAGZRR']
 		self.img = -2.5*np.log10(self.img)
 		self.img += self.header['MAGZPT']
 		self.RecalculateMasked()
@@ -155,7 +157,7 @@ class StarProcessor:
         self.mask = np.logical_and(self.mask, localmask)					
         self.RecalculateMasked()
         return avecount
-    
+		
     def RecalculateMasked(self):
         self.masked = self.img*self.mask
         

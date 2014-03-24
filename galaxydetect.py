@@ -29,7 +29,6 @@ while x<5000:
     stars.append({'coords':starloc, 'count':galcount, 'flux':galflux})	#adds star's paramters to catalogue
     print x, "	",s.img[starloc], "   ", starloc, "   ", galflux,  "   ", galradius
     x=x+1
-	
 #print stars
 
 
