@@ -18,11 +18,13 @@ class StarProcessor:
 		self.img = -2.5*np.log10(self.img)
 		self.img += self.header['MAGZPT']
 		self.RecalculateMasked()
+        
+    def count_to_flux(self, inputcount):
+    	return self.header['MAGZPT'] - 2.5*np.log10(inputcount)
 		
     def flux(self, coords):
     #returns flux at given coordinates, converting the count reading into flux using the predefined MAGZPT value.
 	return self.header['MAGZPT'] - 2.5*np.log10(self.img[coords])
-
 	
     def PreMask(self):
 	#specfies any intial areas to be masked out and maskes them
