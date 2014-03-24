@@ -19,7 +19,7 @@ while x<20:
 	if s.img[starloc] < 34000: # we say this isn't a star any more
 		print "break"
 		break
-	s.MaskStar(starloc) 
+	s.FindGalaxyRadius(starloc) 
 	x=x+1
 	#print x
 np.save("maskfile", s.mask)

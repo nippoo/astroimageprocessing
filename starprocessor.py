@@ -168,6 +168,21 @@ class StarProcessor:
     def RecalculateMasked(self):
         self.masked = self.img*self.mask
         
+    def FindGalaxyRadius(self,coords,threshold=1.1, Gradius=12, Bradius=50, maxradius=100):
+        # Adaptively tries to find the radius of the galaxy by estimating a local background
+        a, b = coords
+
+        y,x = np.ogrid[-a:self.img.shape[0]-a, -b:self.img.shape[1]-b]
+        annulus = (x*x + y*y <= Bradius*Bradius) & (x*x + y*y >= Gradius*Gradius)
+        
+        localbck = np.median(self.img[annulus])
+        thresh = localbck * threshold
+        
+        for r in range(1, 100):
+            testring = (x*x + y*y == r*r)
+            if np.mean(self.img[testring]) < thresh: break
+        return r
+        
     def MaskCircle(self, coords, radius=12):
             for y in range(-radius+1,radius):
                 for x in range(-radius+1,+radius):

@@ -11,7 +11,7 @@ s = StarProcessor()
 
 
 s.mask = np.load("maskfile.npy")	#load the premask
-s.RecalculateMasked
+s.RecalculateMasked()
 
 stars = [] # intialise catalogue
 
@@ -19,15 +19,16 @@ stars = [] # intialise catalogue
 x = 0
 while x<5000:
 	
-	starloc = s.FindBrightest()
-	if s.img[starloc]<3500:
-		print "hit background level in count"
-		break
-	galcount=s.MaskGalaxy(starloc)
-	galflux= s.flux(starloc)
-	stars.append({'coords':starloc, 'count':galcount, 'flux':galflux})	#adds star's paramters to catalogue
-	print x, "	",s.img[starloc], "	", galcount, "	", galflux
-	x=x+1
+    starloc = s.FindBrightest()
+    if s.img[starloc]<3500:
+    	print "hit background level in count"
+    	break
+    galradius=s.FindGalaxyRadius(starloc)
+    galcount=s.MaskGalaxy(starloc, Gradius=galradius)
+    galflux=s.flux(starloc)
+    stars.append({'coords':starloc, 'count':galcount, 'flux':galflux})	#adds star's paramters to catalogue
+    print x, "	",s.img[starloc], "   ", starloc, "   ", galflux,  "   ", galradius
+    x=x+1
 	
 #print stars
 
