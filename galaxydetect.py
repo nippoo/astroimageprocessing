@@ -40,7 +40,7 @@ s.RecalculateMasked
 np.save("catalogue", stars)
 with open('starcatalogue.csv', 'wb') as csvfile:
     spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    spamwriter.writerow(['Co-ord','Peak-Count','Average-Count', 'Average-Flux', 'Error-in-Flux', 'Radius',)
+    spamwriter.writerow(['X-Co-ord','Y-Co-ord','Peak-Count','Average-Count', 'Average-Flux', 'Error-in-Flux', 'Radius',)
     for i in stars:
         spamwriter.writerow([i['coords'][0], i['coords'][1],i['peakcount'],i['avecount'], i['flux'], i['fluxerror'], i['radius']])
         
