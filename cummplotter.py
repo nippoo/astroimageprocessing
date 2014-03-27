@@ -13,14 +13,20 @@ stars = np.load("catalogue.npy")
 
 #print stars
 
-fluxlist = [i['flux'] for i in stars]
-#errorlist = [i['fluxerror'] for i in stars]
+fluxlist = np.array([[i['flux'], i['fluxerror']] for i in stars])
 b = 80          #specifies the number of bins for the historgram
-values, base = np.histogram(fluxlist, bins=b)
-#flxerrors, baseerror = np.histogram(fluxlist, bins=b)
+values, base = np.histogram(fluxlist[0], bins=b)
+
+errorslist = []
+#fluxerror = np.array([[np.where(fluxlist[0] > i[0])] for i in base])
+
+#[t for t in fluxlist if (fluxlist[0] > base[0][0])]
+
+
+
+
+
 cumulative = np.cumsum(values)
-
-
 
 #x_error 
 y_error = cumulative**0.5
