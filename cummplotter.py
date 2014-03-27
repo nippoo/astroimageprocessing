@@ -11,16 +11,22 @@ s = StarProcessor()
 
 stars = np.load("catalogue.npy")
 
-print stars
+#print stars
 
 fluxlist = [i['flux'] for i in stars]
-values, base = np.histogram(fluxlist, bins=40)
+errorlist = [i['fluxerror'] for i in stars]
+b = 10          #specifies the number of bins for the historgram
+values, base = np.histogram(fluxlist, bins=b)
+flxerrors, baseerror = np.histogram(fluxlist, bins=b)
 cumulative = np.cumsum(values)
-x_error = ((s.header['MAGZRR'])**2+(2.5*(4000**-1)*(np.log(10)**-1)*500)**2)**0.5
-print x_error
+
+
+
+#x_error 
 y_error = cumulative**0.5
-print cumulative
-print y_error
+
+#print cumulative
+#print y_error
 plt.errorbar(base[:-1], cumulative,y_error, x_error, c='blue')
-#plt.semilogy()
+plt.semilogy()
 plt.show()

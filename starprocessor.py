@@ -6,6 +6,9 @@ filename = 'mosaic.fits'
 maskthreshold = 35000
 
 class StarProcessor:
+    def count_to_flux_error(self,inputcount,inputerror):
+        return 2.5*(inputcount**-1)*(np.log(10)**-1)*inputerror
+    
     def __init__(self):
         self.OpenFile()
         self.MaskAboveThreshold()
@@ -23,6 +26,7 @@ class StarProcessor:
         
     def count_to_flux(self, inputcount):
     	return self.header['MAGZPT'] - 2.5*np.log10(inputcount)
+	
 		
     def flux(self, coords):
     #returns flux at given coordinates, converting the count reading into flux using the predefined MAGZPT value.
@@ -138,25 +142,31 @@ class StarProcessor:
     def MaskGalaxy(self, coords, Gradius = 12, inner_Bradius = 20, Bradius = 50):
 		#algorithm to caluclate average count of a galaxy
         
-        a, b = coords
+		a, b = coords
 
-        y,x = np.ogrid[-a:self.img.shape[0]-a, -b:self.img.shape[1]-b]
-        gal = (x*x + y*y <= Gradius*Gradius) 
-        annulus = (x*x + y*y <= Bradius*Bradius) & (x*x + y*y >= inner_Bradius*inner_Bradius)
+		y,x = np.ogrid[-a:self.img.shape[0]-a, -b:self.img.shape[1]-b]
+		gal = (x*x + y*y <= Gradius*Gradius) 
+		annulus = (x*x + y*y <= Bradius*Bradius) & (x*x + y*y >= inner_Bradius*inner_Bradius)
         
         #plt.clf()
         #plt.imshow(localmask)
         #plt.show()					
-        localbck = np.median(self.img[np.logical_and(self.mask, annulus)])
+		localbck = np.median(self.img[np.logical_and(self.mask, annulus)])
+		localbckerror = np.std(self.img[np.logical_and(self.mask, annulus)])
+		#print 'backerro:',localbckerror
         #print "localbck", localbck
-        avecount = np.mean(self.img[gal])
-        #print "average count", avecount
-        avecount = avecount-localbck
-        localmask = np.logical_not(gal)
-        #print "true <count>", avecount
-        self.mask = np.logical_and(self.mask, localmask)					
-        self.RecalculateMasked()
-        return avecount
+		avecount = np.mean(self.img[gal])
+		counterror = np.std(self.img[gal])
+		#print 'count error:',counterror
+		#print "average count", avecount
+		avecount = avecount-localbck
+		localmask = np.logical_not(gal)
+		#print "true <count>", avecount
+		self.mask = np.logical_and(self.mask, localmask)				
+		self.RecalculateMasked()
+		totalerror = (localbckerror**2+counterror**2)**0.5
+		#prtin 'total error', 
+		return avecount, totalerror
 		
     def RecalculateMasked(self):
         self.masked = self.img*self.mask

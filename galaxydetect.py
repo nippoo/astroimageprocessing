@@ -17,18 +17,19 @@ stars = [] # intialise catalogue
 
 #galaxy detection
 x = 0
-while x<10000:
+while x<1000:
 	
     starloc = s.FindBrightest()
     if s.img[starloc]<3500:
     	print "hit background level in count"
     	break
     galradius=s.FindGalaxyRadius(starloc)
-    galcount=s.MaskGalaxy(starloc, Gradius=galradius, inner_Bradius = galradius + 15, Bradius = galradius + 80)
+    galcount, galerror=s.MaskGalaxy(starloc, Gradius=galradius, inner_Bradius = galradius + 15, Bradius = galradius + 80)
     if galcount>0:
 		galflux=s.count_to_flux(galcount)
-		stars.append({'coords':starloc, 'count':galcount, 'flux':galflux})	#adds star's paramters to catalogue
-		print x,"	", starloc, "	",s.img[starloc],"	", galcount,  "	", galflux,  "	", galradius
+		galfluxerror=s.count_to_flux_error(galcount,galerror)
+		stars.append({'coords':starloc, 'count':galcount, 'flux':galflux, 'fluxerror':galfluxerror})	#adds star's paramters to catalogue
+		print x,"	", galcount, "	", galflux,  "	", galradius, "	", galfluxerror
 		x=x+1
 #print stars
 
@@ -43,3 +44,8 @@ plt.show()
 
 s.RecalculateMasked
 np.save("catalogue", stars)
+#with open('starcatalogue.csv', 'wb') as csvfile:
+ #   spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+  #  spamwriter.writerow(['header1', 'header2'])
+   # for i in stars:
+    #    spamwriter.writerow([i['count'], i['flux'], i['fluxerror'])
