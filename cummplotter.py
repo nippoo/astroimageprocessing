@@ -7,6 +7,8 @@ import matplotlib.path as path
 
 import itertools
 
+import csv
+
 # finds galaxies and stores the corresponding data in the catalogue.
 
 s = StarProcessor()
@@ -26,13 +28,13 @@ fluxlist = np.sort(fluxlist,axis=1)
 x_error = []
 
 for first, second in itertools.izip(base, base[1:]):
-     x_error.append(np.std([t[0] for t in fluxlist if ((t[1] > first) & (t[1] < second))]))
+     x_error.append(np.std([t[0] for t in fluxlist if ((t[1] >= first) & (t[1] < second))]))
 
 #fluxerror = np.array([[np.where(fluxlist[0] > i[0])] for i in base])
 
 #[t for t in fluxlist if (fluxlist[0] > base[0][0])]
 
-
+print x_error
 
 
 
@@ -40,9 +42,21 @@ cumulative = np.cumsum(values)
 
 #x_error 
 y_error = cumulative**0.5
+cumulative_log=np.log10(cumulative)
+y_error_log=y_error*(2*cumulative*np.log(10))**-1
+
+with open('cumplot_data_inc_errors.csv', 'wb') as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    spamwriter.writerow(['base','x_error','cumulative','y_error','log10(N)','y_error_log'])
+    for i in range(len(base)-1):
+        spamwriter.writerow([base[i],x_error[i], cumulative[i], y_error[i], cumulative_log[i], y_error_log[i]])
+        
+
 
 #print cumulative
 #print y_error
 plt.errorbar(base[:-1], cumulative,y_error,x_error,c='blue')
 plt.semilogy()
 plt.show()
+
+
