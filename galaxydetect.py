@@ -25,8 +25,8 @@ while x<1000:
     if s.img[starloc]<3500:
     	print "hit background level in count"
     	break
-    galradius=s.FindGalaxyRadius(starloc)
-    #galradius = 12
+    #galradius=s.FindGalaxyRadius(starloc)
+    galradius = 12
     galcount, galerror=s.MaskGalaxy(starloc, Gradius=galradius, inner_Bradius = galradius + 15, Bradius = galradius + 80)
     if galcount>0:
 		galflux=s.count_to_flux(galcount)
@@ -40,7 +40,7 @@ s.RecalculateMasked
 np.save("catalogue", stars)
 with open('starcatalogue.csv', 'wb') as csvfile:
     spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    spamwriter.writerow(['X-Co-ord','Y-Co-ord','Peak-Count','Average-Count', 'Average-Flux', 'Error-in-Flux', 'Radius',)
+    spamwriter.writerow(['X-Co-ord','Y-Co-ord','Peak-Count','Average-Count', 'Average-Flux', 'Error-in-Flux', 'Radius'])
     for i in stars:
         spamwriter.writerow([i['coords'][0], i['coords'][1],i['peakcount'],i['avecount'], i['flux'], i['fluxerror'], i['radius']])
         
